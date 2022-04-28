@@ -16,38 +16,37 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "city")
-public class City {
-	
+@Table( name = "COUNTRY")
+public class Country {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
-	
 	private String name;
 	private String status;
-	private String validFrom;
-	private String validTo;
 	private String description;
 	private String workaroundReason;
-	private String portFlag;
-	private String isMaerskCity;
-	private String latitude;
-	private String longitude;
-	
+	private String validFrom;
+	private String validTo;
+	private String restricted;
+	private String postalCodeMandatory;
+	private String stateMandatory;
+    
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "timezone_id",referencedColumnName = "rowid")
 	private Timezone timezone;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "olson_id",referencedColumnName = "rowid")
-	private OlsonTimezone olsonTimezone;
+	@JoinColumn(name = "dst_id",referencedColumnName = "rowid")
+	private DaylightSavingTime dst;
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
-	List<AlternateName> alternateNames;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "country")
+	private List<AlternateName> alternateNames;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
-	List<AlternateCode> alternateCodes;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "country")
+	private List<AlternateCode> alternateCodes;
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
-	List<BusinessDefinedArea> bdaDetails;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "country")
+	private List<BusinessDefinedArea> bdaDetails;
+	
+
 }

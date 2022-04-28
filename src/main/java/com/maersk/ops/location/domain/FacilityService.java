@@ -13,18 +13,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "timezone")
-public class Timezone {
+@Table(name = "FAC_SERVICE")
+public class FacilityService {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO )
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
 	
-	private String code;
 	private String name;
-	private String offsetMin;
+	private String description;
+	private String vasCodes;
 	
 	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "dst_id",referencedColumnName = "rowid")
-	private DaylightSavingTime dst;
+	@JoinColumn(name = "service_grp_id",referencedColumnName = "rowid")
+	private ServiceGroups serviceGroupCode;
 	
+	private String isActive;
 }

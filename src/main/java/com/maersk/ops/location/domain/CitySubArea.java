@@ -16,21 +16,19 @@ import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "city")
-public class City {
-	
+@Table(name = "CITY_SUBAREA")
+public class CitySubArea {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
 	
 	private String name;
 	private String status;
+	private String description;
+	private String isMaerskCity;
 	private String validFrom;
 	private String validTo;
-	private String description;
-	private String workaroundReason;
 	private String portFlag;
-	private String isMaerskCity;
 	private String latitude;
 	private String longitude;
 	
@@ -39,15 +37,23 @@ public class City {
 	private Timezone timezone;
 	
 	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "dst_id",referencedColumnName = "rowid")
+	private DaylightSavingTime dst;
+	
+	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "olson_id",referencedColumnName = "rowid")
 	private OlsonTimezone olsonTimezone;
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
-	List<AlternateName> alternateNames;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "subarea")
+	private List<AlternateName> alternateNames;
 	
-	@OneToMany(cascade = CascadeType.ALL, mappedBy = "city")
-	List<AlternateCode> alternateCodes;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "subarea")
+	private List<AlternateCode> alternateCodes;
 	
-	@OneToMany(cascade = CascadeType.ALL,mappedBy = "city")
-	List<BusinessDefinedArea> bdaDetails;
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "subarea")
+	private List<GeoFence> geoFences;
+	
+	@OneToMany(cascade = CascadeType.ALL,mappedBy = "subarea")
+	private List<BusinessDefinedArea> bdaDetails;
+
 }

@@ -6,25 +6,24 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToOne;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import lombok.Data;
 
 @Data
 @Entity
-@Table(name = "timezone")
-public class Timezone {
+@Table(name = "LOCATION")
+public class Location {
 	@Id
-	@GeneratedValue(strategy = GenerationType.AUTO )
+	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
 	
-	private String code;
 	private String name;
-	private String offsetMin;
+	private String type;
 	
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "dst_id",referencedColumnName = "rowid")
-	private DaylightSavingTime dst;
-	
+	@ManyToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "bda_id",referencedColumnName = "rowid")
+	private BDA bda;
+
 }
