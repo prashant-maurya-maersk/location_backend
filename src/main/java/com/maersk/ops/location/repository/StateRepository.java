@@ -3,10 +3,9 @@ package com.maersk.ops.location.repository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
-import com.maersk.ops.location.model.City;
+import com.maersk.ops.location.model.State;
 
 @Repository
-public interface CityRepository extends CrudRepository<City, Long> {
+public interface StateRepository extends CrudRepository<State, Long> {
 
-	
 }
