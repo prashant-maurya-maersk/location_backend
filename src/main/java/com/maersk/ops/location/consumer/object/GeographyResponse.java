@@ -44,6 +44,8 @@ public class GeographyResponse {
 	private String olsonTimezone;
 	private String bdaType;
 	
+	private String isMaerskCity;   // newly added 
+	
 	private List<GeographyAlternateNames> geographyAlternateNames;
 	private List<GeographyAlternateCodes> geographyAlternateCodes;
 	private List<GeographyFence> geographyFence;

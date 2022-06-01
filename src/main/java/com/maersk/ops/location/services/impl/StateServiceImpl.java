@@ -95,7 +95,7 @@ public class StateServiceImpl implements StateService {
 	
 	private State stateMapper(StateDomain domainState, State state) {
 		if(domainState!=null) {
-			Optional<Timezone> timeDB = timeRepo.findById(domainState.getTimeZone().getRowid());
+			Optional<Timezone> timeDB = timeRepo.findById(domainState.getTimezone().getRowid());
 			if(timeDB.isPresent()) {
 				return state.builder().description(domainState.getDescription()).name(domainState.getName())
 						.status(domainState.getStatus()).timeZone(timeDB.get()).validFrom(domainState.getValidFrom())

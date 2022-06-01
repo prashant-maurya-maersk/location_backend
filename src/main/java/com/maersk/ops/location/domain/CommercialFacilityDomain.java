@@ -9,13 +9,15 @@ import lombok.Data;
 @Builder
 public class CommercialFacilityDomain {
 
-	private Long rowid;
+//	private Long rowid;
+//	
+//	private String name;
+//	private String extOwned;
+//	private String status;
+//	private String extExposed;
+//	private String facilityUrl;
 	
-	private String name;
-	private String extOwned;
-	private String status;
-	private String extExposed;
-	private String facilityUrl;
+	private FacilitySummaryDomain facilitySummary;
 	
 	List<CommercialFacilityDetailDomain> commercialFacilityDetails;
 	

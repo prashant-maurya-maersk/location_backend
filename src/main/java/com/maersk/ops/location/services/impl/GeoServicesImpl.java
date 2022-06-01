@@ -151,7 +151,7 @@ public class GeoServicesImpl implements GeoServices{
 		List<ParentDetailRelation> parentRelations = new ArrayList<ParentDetailRelation>();
 		for(ParentDetail parent: domainnParentList) {
 			EntityType parentType = entityRepo.findByEntityName(parent.getType().toUpperCase()).get(0);
-			parentRelations.add(ParentDetailRelation.builder().childId(childId).childType(childType)
+			parentRelations.add(ParentDetailRelation.builder().childId(childId).childType(childType).parentName(parent.getName())
 					.parentId(parent.getParentId().toString()).parentType(parentType).build());
 		}
 		return parentRelations;
@@ -188,6 +188,11 @@ public class GeoServicesImpl implements GeoServices{
 	public BdaDomain createBDA(BdaDomain bdaDomain) {
 		BDA bda = bdaModelMapper(bdaDomain, new BDA());
 		bda = bdaRepo.save(bda);
+		EntityType entityType = entityRepo.findByEntityName("BDA").get(0);
+		if(bdaDomain.getAlternateCodes()!=null && bdaDomain.getAlternateCodes().size()>0) {
+			List<AlternateCodeDomain> altCodeDomainList = createAltCode(bdaDomain.getAlternateCodes(), bda.getRowid().toString(), entityType);
+			bdaDomain.setAlternateCodes(altCodeDomainList);
+		}
 		bdaDomain.setRowid(bda.getRowid());
 		return bdaDomain;
 	}
@@ -203,6 +208,11 @@ public class GeoServicesImpl implements GeoServices{
 		if(bdaDB.isPresent()) {
 			BDA bda = bdaModelMapper(bdaDomain, bdaDB.get());
 			bda = bdaRepo.save(bda);
+			EntityType entityType = entityRepo.findByEntityName("BDA").get(0);
+			if(bdaDomain.getAlternateCodes()!=null && bdaDomain.getAlternateCodes().size()>0) {
+				List<AlternateCodeDomain> altCodeDomainList = updateAltCode(bdaDomain.getAlternateCodes(), bda.getRowid().toString(), entityType);
+				bdaDomain.setAlternateCodes(altCodeDomainList);
+			}
 			bdaDomain.setRowid(bda.getRowid());
 			return bdaDomain;
 		}

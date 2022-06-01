@@ -13,6 +13,7 @@ import com.maersk.ops.location.domain.FacilityContactDetailDomain;
 import com.maersk.ops.location.domain.FacilityDetailTypeDomain;
 import com.maersk.ops.location.domain.FacilityOpeningHoursDomain;
 import com.maersk.ops.location.domain.FacilityServiceRelationDomain;
+import com.maersk.ops.location.domain.FacilitySummaryDomain;
 import com.maersk.ops.location.domain.FacilityTransportModeDomain;
 import com.maersk.ops.location.domain.OperationalFacilityDetailDomain;
 import com.maersk.ops.location.domain.OperationalFacilityDomain;
@@ -45,9 +46,10 @@ public class OperationalFacilityServiceImpl implements OperationalFacilityServic
 	@Override
 	public OperationalFacilityDomain createOpsFacility(OperationalFacilityDomain domainOpsFacility) {
 		OperationalFacility opsFac = opsFacilityMapper(domainOpsFacility, new OperationalFacility());
-		opsFac = opsFacRepo.save(opsFac);
+		OperationalFacility saved = opsFacRepo.save(opsFac);
+		System.out.println(saved.getFacilityDetail().getRowid());
 		if(domainOpsFacility.getFacilityDetail()!=null && domainOpsFacility.getFacilityDetail().getFacilityDetailTypes()!=null && domainOpsFacility.getFacilityDetail().getFacilityDetailTypes().size()>0) {
-			List<FacilityDetailTypeDomain> facDetTypeList = facServices.createFacilityDetailType(domainOpsFacility.getFacilityDetail().getFacilityDetailTypes(), opsFac.getFacilityDetail());
+			List<FacilityDetailTypeDomain> facDetTypeList = facServices.createFacilityDetailType(domainOpsFacility.getFacilityDetail().getFacilityDetailTypes(), saved.getFacilityDetail());
 			domainOpsFacility.getFacilityDetail().setFacilityDetailTypes(facDetTypeList);
 		}
 		EntityType entityType = entityRepo.findByEntityName("OPS_FAC").get(0);
@@ -67,7 +69,7 @@ public class OperationalFacilityServiceImpl implements OperationalFacilityServic
 			List<FacilityServiceRelationDomain> facSerRelList = facServices.createFacilityServiceRelation(domainOpsFacility.getFacilityServices(), opsFac.getRowid().toString(), entityType);
 			domainOpsFacility.setFacilityServices(facSerRelList);
 		}
-		domainOpsFacility.setRowid(opsFac.getRowid());
+		domainOpsFacility.getFacilitySummary().setRowid(opsFac.getRowid());
 		return domainOpsFacility;
 	}
 	
@@ -75,7 +77,7 @@ public class OperationalFacilityServiceImpl implements OperationalFacilityServic
 	public OperationalFacilityDomain updateOpsFacility(OperationalFacilityDomain domainOpsFacility) {
 		Optional<OperationalFacility> opsFacDB = null;
 		try {
-			opsFacDB = opsFacRepo.findById(domainOpsFacility.getRowid());
+			opsFacDB = opsFacRepo.findById(domainOpsFacility.getFacilitySummary().getRowid());
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -103,33 +105,39 @@ public class OperationalFacilityServiceImpl implements OperationalFacilityServic
 				List<FacilityServiceRelationDomain> facSerRelList = facServices.updateFacilityServiceRelation(domainOpsFacility.getFacilityServices(), opsFac.getRowid().toString(), entityType);
 				domainOpsFacility.setFacilityServices(facSerRelList);
 			}
-			domainOpsFacility.setRowid(opsFac.getRowid());
+			domainOpsFacility.getFacilitySummary().setRowid(opsFac.getRowid());
 			return domainOpsFacility;
 		}
 		return null;
 	}
 	
 	private OperationalFacility opsFacilityMapper(OperationalFacilityDomain domainOpsFac, OperationalFacility opsFac) {
-		opsFac = opsFac.builder().extExposed(domainOpsFac.getExtExposed()).extOwned(domainOpsFac.getExtOwned()).facilityUrl(domainOpsFac.getFacilityUrl())
-				.name(domainOpsFac.getName()).status(domainOpsFac.getStatus()).build();
+		opsFac = opsFac.builder().extExposed(domainOpsFac.getFacilitySummary().getExtExposed()).extOwned(domainOpsFac.getFacilitySummary().getExtOwned()).facilityUrl(domainOpsFac.getFacilitySummary().getFacilityUrl())
+				.name(domainOpsFac.getFacilitySummary().getName()).status(domainOpsFac.getFacilitySummary().getStatus()).rowid(domainOpsFac.getFacilitySummary().getRowid()==null?null:domainOpsFac.getFacilitySummary().getRowid()).build();
+		OperationalFacilityDetail opsFacDetail = new OperationalFacilityDetail();
+		List<FacilityTransportMode> facTransportList = new ArrayList<FacilityTransportMode>();
+		List<FacilityContactDetails> facContactList = new ArrayList<FacilityContactDetails>();
 		if(domainOpsFac.getFacilityDetail()!=null) {
-			OperationalFacilityDetail opsFacDetail = opsFacDetMapper(domainOpsFac.getFacilityDetail(), opsFac);
-			opsFac.setFacilityDetail(opsFacDetail);
+			opsFacDetail = opsFacDetMapper(domainOpsFac.getFacilityDetail(), opsFac);
+//			opsFac.setFacilityDetail(opsFacDetail);
 		}
 		if(domainOpsFac.getFacilityTransportMode()!=null && domainOpsFac.getFacilityTransportMode().size()>0) {
-			List<FacilityTransportMode> facTransportList = facTransportMapper(domainOpsFac.getFacilityTransportMode(), opsFac);
-			opsFac.setFacilityTransportMode(facTransportList);
+			facTransportList = facTransportMapper(domainOpsFac.getFacilityTransportMode(), opsFac);
+//			opsFac.setFacilityTransportMode(facTransportList);
 		}
 		if(domainOpsFac.getFacilityContactDetails()!=null && domainOpsFac.getFacilityContactDetails().size()>0) {
-			List<FacilityContactDetails> facContactList = contactDetailMapper(domainOpsFac.getFacilityContactDetails(), opsFac);
-			opsFac.setFacilityContactDetails(facContactList);
+			facContactList = contactDetailMapper(domainOpsFac.getFacilityContactDetails(), opsFac);
+//			opsFac.setFacilityContactDetails(facContactList);
 		}
+		opsFac.setFacilityDetail(opsFacDetail);
+		opsFac.setFacilityTransportMode(facTransportList);
+		opsFac.setFacilityContactDetails(facContactList);
 		return opsFac;	
 	}
 	
 	private OperationalFacilityDetail opsFacDetMapper(OperationalFacilityDetailDomain domainOpsFacDetail, OperationalFacility opsFac) {
 		OperationalFacilityDetail opsFacDet = OperationalFacilityDetail.builder().gpsFlag(domainOpsFacDetail.getGpsFlag()).gsmFlag(domainOpsFacDetail.getGsmFlag())
-				.oceanFreightPricing(domainOpsFacDetail.getOceanFreightPricing()).operationalFacility(opsFac).vesselAgent(domainOpsFacDetail.getVesselAgent())
+				.oceanFreightPricing(domainOpsFacDetail.getOceanFreightPricing()).vesselAgent(domainOpsFacDetail.getVesselAgent())
 				.weightLimitCraneKg(domainOpsFacDetail.getWeightLimitCraneKg()).weightLimitYardKg(domainOpsFacDetail.getWeightLimitYardKg())
 				.rowid(domainOpsFacDetail.getRowid()==null?null:domainOpsFacDetail.getRowid()).build();
 		

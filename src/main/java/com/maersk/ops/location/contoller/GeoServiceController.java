@@ -3,6 +3,7 @@ package com.maersk.ops.location.contoller;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import com.maersk.ops.location.repository.EntityTypeRepo;
 import com.maersk.ops.location.services.GeoServices;
 import com.maersk.ops.location.services.TimezoneService;
 
+@CrossOrigin(originPatterns = "http://localhost:3000")
 @RestController
 public class GeoServiceController {
 	

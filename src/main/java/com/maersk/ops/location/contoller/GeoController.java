@@ -1,6 +1,7 @@
 package com.maersk.ops.location.contoller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -20,6 +21,7 @@ import com.maersk.ops.location.services.PostalCodeService;
 import com.maersk.ops.location.services.SiteService;
 import com.maersk.ops.location.services.StateService;
 
+@CrossOrigin(originPatterns = "http://localhost:3000")
 @RestController
 public class GeoController {
 	
@@ -70,47 +72,47 @@ public class GeoController {
 	}
 	
 	@PostMapping("/update/CitySubarea")
-	public CitySubAreaDomain updateSubarea(CitySubAreaDomain domainSubarea) {
+	public CitySubAreaDomain updateSubarea(@RequestBody CitySubAreaDomain domainSubarea) {
 		return subareaService.updateSubarea(domainSubarea);
 	}
 	
 	@PostMapping("/create/Site")
-	public SiteDomain createSite(SiteDomain domainSite) {
+	public SiteDomain createSite(@RequestBody SiteDomain domainSite) {
 		return siteService.createSite(domainSite);
 	}
 	
 	@PostMapping("/update/Site")
-	public SiteDomain updateSite(SiteDomain domainSite) {
+	public SiteDomain updateSite(@RequestBody SiteDomain domainSite) {
 		return siteService.updateSite(domainSite);
 	}
 	
 	@PostMapping("/create/Country")
-	public CountryDomain createCountry(CountryDomain domainCountry) {
+	public CountryDomain createCountry(@RequestBody CountryDomain domainCountry) {
 		return countryService.createCountry(domainCountry);
 	}
 	
 	@PostMapping("/update/Country")
-	public CountryDomain updateCountry(CountryDomain domainCountry) {
+	public CountryDomain updateCountry(@RequestBody CountryDomain domainCountry) {
 		return countryService.updateCountry(domainCountry);
 	}
 	
 	@PostMapping("/create/PostalCode")
-	public PostalCodeDomain createPostal(PostalCodeDomain domainPostal) {
+	public PostalCodeDomain createPostal(@RequestBody PostalCodeDomain domainPostal) {
 		return postalService.createPostalCode(domainPostal);
 	}
 	
 	@PostMapping("/update/PostalCode")
-	public PostalCodeDomain updatePostal(PostalCodeDomain domainPostal) {
+	public PostalCodeDomain updatePostal(@RequestBody PostalCodeDomain domainPostal) {
 		return postalService.updatePostalCode(domainPostal);
 	}
 	
 	@PostMapping("/create/Continent")
-	public ContinentDomain createContinent(ContinentDomain domainContinent) {
+	public ContinentDomain createContinent(@RequestBody ContinentDomain domainContinent) {
 		return continentService.createContinent(domainContinent);
 	}
 	
 	@PostMapping("/update/Continent")
-	public ContinentDomain updateContinent(ContinentDomain domainContinent) {
+	public ContinentDomain updateContinent(@RequestBody ContinentDomain domainContinent) {
 		return continentService.updateContinent(domainContinent);
 	}
 	

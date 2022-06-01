@@ -24,7 +24,7 @@ public class StateDomain {
 	private String validFrom;
 	private String validTo;
 	
-	private Timezone timeZone;
+	private Timezone timezone;
 	
     private List<AlternateNameDomain> alternateNames;
 	

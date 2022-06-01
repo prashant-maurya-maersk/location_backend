@@ -1,12 +1,16 @@
 package com.maersk.ops.location.model;
 
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +29,9 @@ public class FacilityTransportMode {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
 	
+	@Column(name = "uuid")
+	private String uuid;
+	
 	private String transportMode; 
 	private String transportCode; 
 	private String transportDescription; 
@@ -33,4 +40,11 @@ public class FacilityTransportMode {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "ops_fac_id",referencedColumnName = "rowid")
 	private OperationalFacility operationalFacility;
+	
+	@PrePersist
+	public void initializeUUID() {
+	    if (uuid == null) {
+	    	uuid = UUID.randomUUID().toString().replace("-", "");
+	    }
+	}
 }

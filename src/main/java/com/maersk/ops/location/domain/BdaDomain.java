@@ -1,5 +1,7 @@
 package com.maersk.ops.location.domain;
 
+import java.util.List;
+
 import com.maersk.ops.location.model.BDAType;
 
 import lombok.AllArgsConstructor;
@@ -19,5 +21,7 @@ public class BdaDomain {
 	private String validTo;
 	
 	private BDAType bdaType;
+	
+	private List<AlternateCodeDomain> alternateCodes;
 
 }

@@ -276,6 +276,7 @@ public class FacilityServicesImpl implements FacilityServices {
 						.rowid(domainFacDetType.getRowid()==null?null:domainFacDetType.getRowid()).build());
 			}
 		}
+		System.out.println(facDetTypeRelList.size());  // Test 
 		return facDetTypeRelList;
 	}
 	

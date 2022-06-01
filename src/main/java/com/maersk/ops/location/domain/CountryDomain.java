@@ -4,11 +4,15 @@ import java.util.List;
 
 import com.maersk.ops.location.model.Timezone;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CountryDomain {
 	private Long rowid;
 	private String name;

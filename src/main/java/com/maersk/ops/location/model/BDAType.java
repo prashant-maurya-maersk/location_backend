@@ -1,13 +1,16 @@
 package com.maersk.ops.location.model;
 
 import java.util.List;
+import java.util.UUID;
 
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -26,6 +29,9 @@ public class BDAType {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
 	
+	@Column(name = "uuid")
+	private String uuid;
+	
 	private String name;
 	private String type;
 	private String code;
@@ -34,5 +40,12 @@ public class BDAType {
 	
 	@OneToMany(cascade = CascadeType.ALL, mappedBy = "bdaType")
 	private List<ContentType> contentTypes;
+	
+	@PrePersist
+	public void initializeUUID() {
+	    if (uuid == null) {
+	    	uuid = UUID.randomUUID().toString().replace("-", "");
+	    }
+	}
 
 }

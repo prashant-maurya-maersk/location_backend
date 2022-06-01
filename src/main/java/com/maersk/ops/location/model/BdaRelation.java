@@ -1,12 +1,16 @@
 package com.maersk.ops.location.model;
 
+import java.util.UUID;
+
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.PrePersist;
 import javax.persistence.Table;
 
 import lombok.AllArgsConstructor;
@@ -25,6 +29,9 @@ public class BdaRelation {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private Long rowid;
 	
+	@Column(name = "uuid")
+	private String uuid;
+	
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "bda_id",referencedColumnName = "rowid")
 	private BDA bda;
@@ -34,4 +41,11 @@ public class BdaRelation {
 	@ManyToOne(cascade = CascadeType.ALL)
 	@JoinColumn(name = "entityTypeId",referencedColumnName = "rowid")
 	private EntityType entityTypeId;
+	
+	@PrePersist
+	public void initializeUUID() {
+	    if (uuid == null) {
+	    	uuid = UUID.randomUUID().toString().replace("-", "");
+	    }
+	}
 }

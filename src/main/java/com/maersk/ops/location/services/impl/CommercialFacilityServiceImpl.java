@@ -13,6 +13,7 @@ import com.maersk.ops.location.domain.CommercialFacilityDomain;
 import com.maersk.ops.location.domain.FacilityAddressDomain;
 import com.maersk.ops.location.domain.FacilityOpeningHoursDomain;
 import com.maersk.ops.location.domain.FacilityServiceRelationDomain;
+import com.maersk.ops.location.domain.FacilitySummaryDomain;
 import com.maersk.ops.location.model.CommercialFacility;
 import com.maersk.ops.location.model.CommercialFacilityDetail;
 import com.maersk.ops.location.model.EntityType;
@@ -62,7 +63,7 @@ public class CommercialFacilityServiceImpl implements CommercialFacilityService 
 			List<FacilityServiceRelationDomain> facSerRelList = facilityServices.createFacilityServiceRelation(domainComFac.getFacilityServices(), commFacility.getRowid().toString(), entityType);
 			domainComFac.setFacilityServices(facSerRelList);
 		}
-		domainComFac.setRowid(commFacility.getRowid());
+		domainComFac.getFacilitySummary().setRowid(commFacility.getRowid());
 		return domainComFac;
 	}
 	
@@ -70,7 +71,7 @@ public class CommercialFacilityServiceImpl implements CommercialFacilityService 
 	public CommercialFacilityDomain updateCommFacility(CommercialFacilityDomain domainComFac) {
 		Optional<CommercialFacility> commFacDB = null;
 		try {
-			commFacDB = commFacRepo.findById(domainComFac.getRowid());
+			commFacDB = commFacRepo.findById(domainComFac.getFacilitySummary().getRowid());
 		}catch(Exception e) {
 			System.out.println(e.getMessage());
 		}
@@ -98,16 +99,17 @@ public class CommercialFacilityServiceImpl implements CommercialFacilityService 
 				List<FacilityServiceRelationDomain> facSerRelList = facilityServices.updateFacilityServiceRelation(domainComFac.getFacilityServices(), commFac.getRowid().toString(), entityType);
 				domainComFac.setFacilityServices(facSerRelList);
 			}
-			domainComFac.setRowid(commFac.getRowid());
+			domainComFac.getFacilitySummary().setRowid(commFac.getRowid());
 		}
 		return domainComFac;
 	}
 	
 	private CommercialFacility commFacMapper(CommercialFacilityDomain domainComFac, CommercialFacility commFac) {
 		if(domainComFac != null) {
-			return commFac.builder().extExposed(domainComFac.getExtExposed()).extOwned(domainComFac.getExtOwned())
-					.facilityUrl(domainComFac.getFacilityUrl()).name(domainComFac.getName()).status(domainComFac.getStatus())
-					.rowid(domainComFac.getRowid()==null?null:domainComFac.getRowid()).build();
+			FacilitySummaryDomain facSummary = domainComFac.getFacilitySummary();
+			return commFac.builder().extExposed(facSummary.getExtExposed()).extOwned(facSummary.getExtOwned())
+					.facilityUrl(facSummary.getFacilityUrl()).name(facSummary.getName()).status(facSummary.getStatus())
+					.rowid(facSummary.getRowid()==null?null:facSummary.getRowid()).build();
 		}
 		return null;
 	}
